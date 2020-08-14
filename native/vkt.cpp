@@ -1,3 +1,8 @@
+/**
+ * use open source code of BenFields724/VulkanMacOS
+ * @see https://github.com/BenFields724/VulkanMacOS
+ */
+
 /*
  *Tutorial: Left off at texture images
  *Author: Benjamin Fields

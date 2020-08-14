@@ -18,6 +18,12 @@
 npm config set electron_mirror https://mirrors.huaweicloud.com/electron/
 ```
 
+接下来安装依赖：
+
+```shell
+npm install
+```
+
 # 构建 C++ Addon
 
 ```shell

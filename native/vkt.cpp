@@ -34,9 +34,9 @@
 
 const int WIDTH = 800;
 const int HEIGHT = 600;
-const std::string TEXTURE_PATH = "/Users/kindem/Code/nodejs/electron-vulkan/native/textures/puppy.jpg";
-const std::string VTX_SHADER_PATH = "/Users/kindem/Code/nodejs/electron-vulkan/native/shaders/vert.spv";
-const std::string FRAG_SHADER_PATH = "/Users/kindem/Code/nodejs/electron-vulkan/native/shaders/frag.spv";
+const std::string TEXTURE_PATH = "../../../../../../native/textures/puppy.jpg";
+const std::string VTX_SHADER_PATH = "../../../../../../native/shaders/vert.spv";
+const std::string FRAG_SHADER_PATH = "../../../../../../native/shaders/frag.spv";
 const float PI = 3.14159;
 
 float roty = 0.0;

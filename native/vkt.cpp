@@ -36,7 +36,7 @@ const int WIDTH = 800;
 const int HEIGHT = 600;
 const float PI = 3.14159;
 
-#if defined(_WIN32)
+#ifdef _WIN32
 const std::string TEXTURE_PATH = "native/textures/puppy.jpg";
 const std::string VTX_SHADER_PATH = "native/shaders/vert.spv";
 const std::string FRAG_SHADER_PATH = "native/shaders/frag.spv";

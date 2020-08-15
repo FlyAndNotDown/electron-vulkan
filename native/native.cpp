@@ -2,8 +2,16 @@
 #include <iostream>
 #include <vkt.h>
 
+#ifndef _WIN32
+#include <windows.h>
+#endif
+
 namespace demo {
     napi_value VkTestFunc(napi_env env, napi_callback_info args) {
+#ifdef _WIN32
+        FILE* stream = nullptr;
+        freopen_s(&stream, "CONOUT$", "w", stdout);
+#endif
         size_t argc = 1;
         napi_value argv[1];
         napi_get_cb_info(env, args, &argc, argv, nullptr, nullptr);
@@ -13,6 +21,9 @@ namespace demo {
         std::cout << value << std::endl;
 
         VkTest();
+#ifdef _WIN32
+        fclose(stream);
+#endif
         return nullptr;
     }
 

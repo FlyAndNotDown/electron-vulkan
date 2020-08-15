@@ -3,14 +3,6 @@ project(electron_vulkan)
 
 set(CMAKE_CXX_STANDARD 20)
 
-if (WIN32)
-    message(FATAL_ERROR "[err] this project is not support Windows yet")
-elseif(APPLE)
-    message("[info] os is MacOS")
-elseif(UNIX)
-    message(FATAL_ERROR "[err] this project is not support Unix yet")
-endif()
-
 # Node.js
 ## this line is just for cxx hints, you can just remove it
 include_directories(/usr/local/include/node)

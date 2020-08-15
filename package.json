@@ -12,5 +12,10 @@
   "dependencies": {
     "cmake-js": "^6.1.0",
     "electron": "^9.2.0"
+  },
+  "cmake-js": {
+    "runtime": "electron",
+    "runtimeVersion": "9.2.0",
+    "arch": "x64"
   }
 }

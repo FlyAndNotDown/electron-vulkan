@@ -4,7 +4,6 @@
 
 # 环境要求
 
-* `MacOS`：其他系统暂不支持
 * `CMake`
 * `Node.js`
 * `VulkanSDK`

@@ -16,11 +16,16 @@ namespace demo {
         napi_value argv[1];
         napi_get_cb_info(env, args, &argc, argv, nullptr, nullptr);
 
-        void* value;
-        napi_get_value_external(env, argv[0], &value);
+        int32_t value;
+        napi_get_value_int32(env, argv[0], &value);
         std::cout << value << std::endl;
 
+#ifdef _WIN32
+        VkTest((HWND) value);
+#else
         VkTest();
+#endif
+
 #ifdef _WIN32
         fclose(stream);
 #endif

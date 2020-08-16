@@ -11,16 +11,12 @@
 
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
-#include <vulkan/vulkan.h>
-#include <vulkan/vk_platform.h>
 #include <iostream>
 #include <stdexcept>
 #include <vector>
 #include <cstring>
-#include <string>
 #include <map>
 #include <set>
-#include <algorithm>
 #include <fstream>
 #define GLM_FORCE_RADIANS
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE
@@ -31,6 +27,13 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 #include <vkt.h>
+
+#ifdef _WIN32
+#include <windows.h>
+#include <vulkan/vulkan_win32.h>
+#undef min
+#undef max
+#endif
 
 const int WIDTH = 800;
 const int HEIGHT = 600;
@@ -418,9 +421,18 @@ const std::vector<uint16_t> indices = {
 
 class HelloTriangleApplication {
 public:
-    void run() {
+#ifdef _WIN32
+    void run(HWND hWnd)
+#else
+    void run()
+#endif
+    {
+#ifdef _WIN32
+        initVulkan(hWnd);
+#else
         initWindow();
         initVulkan();
+#endif
         std::cout<<"\n**************Entering Main Loop**************\n";
         mainLoop();
         std::cout<<"\n**************Exiting Main Loop***************\n";
@@ -495,10 +507,19 @@ private:
         glfwSetCursorPosCallback( window, MouseMotionCallback );
     }
 
-    void initVulkan() {
+#ifdef _WIN32
+    void initVulkan(HWND hWnd)
+#else
+    void initVulkan()
+#endif
+    {
         createInstance();
         setupDebugCallback();
+#ifdef _WIN32
+        createSurface(hWnd);
+#else
         createSurface();
+#endif
         pickPhysicalDevice();
         createLogicalDevice();
         createSwapChain();
@@ -1730,11 +1751,28 @@ private:
         return details;
     }
 
+#ifdef _WIN32
+    void createSurface(HWND hWnd)
+#else
     void createSurface()
+#endif
     {
+#ifdef _WIN32
+        VkWin32SurfaceCreateInfoKHR sci;
+        memset(&sci, 0, sizeof(sci));
+        sci.sType = VK_STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR;
+        sci.hinstance = GetModuleHandle(nullptr);
+        sci.hwnd = hWnd;
+
+        VkResult err = vkCreateWin32SurfaceKHR(instance, &sci, nullptr, &surface);
+        if (err) {
+            throw std::runtime_error("ERROR: failed to create window surface");
+        }
+#else
         if (glfwCreateWindowSurface(instance, window, nullptr, &surface) != VK_SUCCESS) {
             throw std::runtime_error("ERROR: failed to create window surface!");
         }
+#endif
     }
 
     int rateDeviceSuitability(VkPhysicalDevice device) {
@@ -1956,6 +1994,11 @@ private:
         if (enableValidationLayers) {
             extensions.push_back(VK_EXT_DEBUG_REPORT_EXTENSION_NAME);
         }
+
+#ifdef _WIN32
+        extensions.push_back(VK_KHR_SURFACE_EXTENSION_NAME);
+        extensions.push_back(VK_KHR_WIN32_SURFACE_EXTENSION_NAME);
+#endif
 
         return extensions;
     }
@@ -2190,12 +2233,20 @@ private:
 
 };
 
+#ifdef _WIN32
+extern "C" void VkTest(HWND hWnd)
+#else
 extern "C" void VkTest()
+#endif
 {
     HelloTriangleApplication app;
 
     try {
+#ifdef _WIN32
+        app.run(hWnd);
+#else
         app.run();
+#endif
     } catch (const std::runtime_error& e) {
         std::cerr << e.what() << std::endl;
     }

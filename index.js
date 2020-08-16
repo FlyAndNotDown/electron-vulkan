@@ -1,5 +1,10 @@
 const { app, BrowserWindow } = require('electron');
+const OS = require('os');
 const NativeApi = require('./build/Release/electron_vulkan');
+
+function readNativeHandle(buf) {
+    return OS.type() === 'Windows_NT' ? buf.readInt32LE(0) : buf.readInt32BE(0);
+}
 
 function createWindow () {
     let win = new BrowserWindow({
@@ -9,9 +14,12 @@ function createWindow () {
             nodeIntegration: true
         }
     })
+    win.loadFile('index.html').then(() => {
+        console.log('index.html loaded');
+    });
 
-    win.loadFile('index.html');
-    NativeApi.vkTest(win.getNativeWindowHandle());
+    // using vulkan in electron
+    NativeApi.vkTest(readNativeHandle(win.getNativeWindowHandle()));
 }
 
 app.whenReady().then(() => {
